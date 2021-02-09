@@ -27,7 +27,7 @@ library(patchwork)
 
 Summary:
 
-This report provides an overview of adult salmon passage at the Willamette Falls fish ladder, for three species of fish (Coho, Jack-Coho, and Steelhead) observed at Willamette River in Oregon from 2001 - 2010 (Columbia River DART). Specifically, a static graph, seasonplot, and line plot of annual counts are used to explore how the fish populations are changing over the given timeframe.
+This report provides an overview of adult salmon passage at the Willamette Falls fish ladder, for three species of fish (Coho, Jack-Coho, and Steelhead) observed at Willamette River in Oregon from 2001 to 2010 (Columbia River DART). The first plot, a static time series graph explores overall pasage counts by species. Second, a seasonplot examines how species passage counts vary by month for each year from 2001 to 2010. The final plot shows annual counts by species in order to look specifically at trends in annual abundance of the three species over the time period.
 
 
 ![Source: US Army Corps of Engineers, Portland District](https://www.nwp.usace.army.mil/Portals/24/images/Willamette_Falls_Locks_area_map.jpg?ver=2018-10-01-153840-817&timestamp=1538422736049)
