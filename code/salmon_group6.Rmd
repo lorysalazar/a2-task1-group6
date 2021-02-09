@@ -111,9 +111,11 @@ tab_1_patchwork + plot_annotation(
 )
 
 ```
+
 **Figure 1.** Time series plot of adult passage counts for three salmon species, coho, jack coho, and steelhead at the Wilamette Falls fish ladder on the Willamette River in Oregon.
 
-Summary
+#### Summary
+
 - Coho salmon passage appears to be seasonal, with strong peaks occurring at regular intervals in each year, with peaks seeming to trend upward.
 - Jack coho salmon also appear to have strong seasonal peaks, at similar times in the year as coho salmon. From this plot, there does not appear to be a strong trend in changes in counts.
 - Steelhead salmon also had seasonal peaks, though there were more fluctuations consistently between large peaks. From this plot, there is no clear discernible trend.
@@ -152,6 +154,7 @@ patchwork + plot_annotation(
   caption = "Data: Columbia River DART"
 )
 ```
+
 **Figure 2.** Seasonal plot for salmon passage counts at the Willamette Falls fish ladder in Oregon. Passage counts of 3 species (Coho, Jack-Coho, and Steelhead) were measured from 2001-2010. Data: Columbia River DART.
 
 #### Summary
