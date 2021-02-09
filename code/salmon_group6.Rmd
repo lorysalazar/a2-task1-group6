@@ -14,6 +14,9 @@ library(tidyverse)
 library(here)
 library(janitor)
 library(lubridate)
+library(feasts)
+library(tsibble)
+library(patchwork)
 ```
 
 ## Overview {.tabset}
@@ -24,7 +27,7 @@ library(lubridate)
 
 Summary:
 
-This report provides an overview of adult passage at the Willamette Falls fish ladder, for three species of fish (Coho, Jack-Coho, and Steelhead) observed at Willamette River in Oregon from 2001 - 2010 (Columbia River DART). Specifically, a static graph, seasonplot, and line plot of annual counts are used to explore how the fish populations are changing over the given timeframe.
+This report provides an overview of adult salmon passage at the Willamette Falls fish ladder, for three species of fish (Coho, Jack-Coho, and Steelhead) observed at Willamette River in Oregon from 2001 - 2010 (Columbia River DART). Specifically, a static graph, seasonplot, and line plot of annual counts are used to explore how the fish populations are changing over the given timeframe.
 
 
 ![Source: US Army Corps of Engineers, Portland District](https://www.nwp.usace.army.mil/Portals/24/images/Willamette_Falls_Locks_area_map.jpg?ver=2018-10-01-153840-817&timestamp=1538422736049)
@@ -32,6 +35,42 @@ This report provides an overview of adult passage at the Willamette Falls fish l
 Data citation: 
 
 Columbia River DART, Columbia Basin Research, University of Washington. (2021). Adult Passage Daily Counts. Available from http://www.cbr.washington.edu/dart/query/adult_daily
+
+```{r}
+# Reading in the data
+fish <- read.csv(here("data", "willamette_fish_passage.csv")) %>% 
+  clean_names()
+
+# Create a subset of just the three species of interest, using pivot_longer to put them in one singular column 
+fish_sub <- fish %>% 
+  select(date, coho, jack_coho, steelhead) %>% 
+  mutate(date = lubridate::mdy(date)) %>% 
+  mutate(year = year(date)) %>%  
+  pivot_longer(cols = coho:steelhead,
+               names_to = "species", 
+               values_to = "count") 
+ 
+# Create a tsibble for each species (coho, jack_coho, steelhead)
+# coho
+coho_ts <- fish_sub %>% 
+  filter(species == "coho") %>% 
+  select(date, count) %>% 
+  mutate(replace(., is.na(.), 0)) %>% 
+  as_tsibble(key = NULL, index = date) 
+
+# jack_coho
+jack_coho_ts <- fish_sub %>% 
+  filter(species == "jack_coho") %>% 
+  mutate(replace(., is.na(.), 0)) %>% 
+  as_tsibble(key = NULL, index = date) 
+
+# steelhead
+steelhead_ts <- fish_sub %>% 
+  filter(species == "steelhead") %>% 
+  mutate(replace(., is.na(.), 0)) %>% 
+  as_tsibble(key = NULL, index = date) 
+```
+
 
 ### Original time series
 
@@ -43,27 +82,51 @@ Columbia River DART, Columbia Basin Research, University of Washington. (2021). 
 ### Seasonplots
 
 ```{r}
-# tab 2 content
-```
+# Creating a seasonplot for each species
 
+coho_season <- coho_ts %>% 
+  gg_season(y = count) +
+  theme_minimal() +
+  labs(title = "Coho",
+       x = "month")
+
+jack_coho_season <- jack_coho_ts %>% 
+  gg_season(y = count) +
+  theme_minimal()+
+  labs(title = "Jack Coho",
+       x = "month")
+
+
+steelhead_season <- steelhead_ts %>% 
+  gg_season(y = count) +
+  theme_minimal()+
+  labs(title = "Steelhead",
+       x = "month")
+
+
+patchwork <- (coho_season / jack_coho_season / steelhead_season) +
+  plot_layout(guides = 'collect')
+
+patchwork + plot_annotation(
+  title = "Adult salmon passage at the Willamette Falls fish ladder, 2001 - 2010",
+  caption = "Data: Columbia River DART"
+)
+```
+**Figure 2.** Seasonal plot for salmon passage counts for 3 species (Coho, Jack-Coho, and Steelhead). Fish counts were measured from 2001-2010. Data: Columbia River DART.
+
+#### Summary
+
+- Coho salmon runs tend to peak around October, and the magnitude of the peak has increased over time.
+- Jack Coho salmon runs also tend to peak around October, and the magnitude of the peak has increased over time.
+- Steelhead salmon runs don't appear to have a clear peak, but most of the counts appear before August.
 
 ### Annual counts
 
 ```{r}
-# Reading in the data
-fish <- read.csv(here("data", "willamette_fish_passage.csv")) %>% 
-  clean_names()
-
-# Create a subset of just the three species of interest, using pivot_longer to put them in one singular column 
-spp_date <- fish %>% 
-  select(date, coho, jack_coho, steelhead) %>% 
-  mutate(date = mdy(date)) %>% 
-  mutate(year = year(date)) %>% 
-  pivot_longer(cols = coho:steelhead,
-               names_to = "species", 
-               values_to = "count") %>% 
+# Group by year and count for each species
+spp_date <- fish_sub %>% 
   group_by(year) %>% 
-  count(species, wt = count)
+  count(species, wt = count) 
 
 # Creating a plot to visualize annual counts of the three species
 
