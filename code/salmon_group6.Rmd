@@ -1,5 +1,6 @@
 ---
-title: "Salmon Group 6"
+title: "Assignment 2 Task 1: Wilamette Falls Fish Passage"
+Subtitle: "Group 6"
 author: "Lory Salazar, Marie Bouffard, Ruiheng Jin"
 date: "2/4/2021"
 output: 
