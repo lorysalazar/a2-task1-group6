@@ -16,6 +16,7 @@ library(janitor)
 library(lubridate)
 library(feasts)
 library(tsibble)
+library(patchwork)
 ```
 
 ## Overview {.tabset}
@@ -53,6 +54,7 @@ fish_sub <- fish %>%
 # coho
 coho_ts <- fish_sub %>% 
   filter(species == "coho") %>% 
+  select(date, count) %>% 
   mutate(replace(., is.na(.), 0)) %>% 
   as_tsibble(key = NULL, index = date) 
 
@@ -82,11 +84,41 @@ steelhead_ts <- fish_sub %>%
 ```{r}
 # Creating a seasonplot for each species
 
-spp_date %>% 
-  gg_season(y = n)
+coho_season <- coho_ts %>% 
+  gg_season(y = count) +
+  theme_minimal() +
+  labs(title = "Coho",
+       x = "month")
 
+jack_coho_season <- jack_coho_ts %>% 
+  gg_season(y = count) +
+  theme_minimal()+
+  labs(title = "Jack Coho",
+       x = "month")
+
+
+steelhead_season <- steelhead_ts %>% 
+  gg_season(y = count) +
+  theme_minimal()+
+  labs(title = "Steelhead",
+       x = "month")
+
+
+patchwork <- (coho_season / jack_coho_season / steelhead_season) +
+  plot_layout(guides = 'collect')
+
+patchwork + plot_annotation(
+  title = "Adult salmon passage at the Willamette Falls fish ladder, 2001 - 2010",
+  caption = "Data: Columbia River DART"
+)
 ```
+**Figure 2.** Seasonal plot for salmon passage counts for 3 species (Coho, Jack-Coho, and Steelhead). Fish counts were measured from 2001-2010. Data: Columbia River DART.
 
+#### Summary
+
+- Coho salmon runs tend to peak around October, and the magnitude of the peak has increased over time.
+- Jack Coho salmon runs also tend to peak around October, and the magnitude of the peak has increased over time.
+- Steelhead salmon runs don't appear to have a clear peak, but most of the counts appear before August.
 
 ### Annual counts
 
