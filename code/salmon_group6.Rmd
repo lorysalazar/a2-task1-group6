@@ -2,9 +2,61 @@
 title: "Salmon Group 6"
 author: "Lory Salazar, Marie Bouffard, Ruiheng Jin"
 date: "2/4/2021"
-output: html_document
+output: 
+  html_document:
+    theme: darkly
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(tidyverse)
+library(here)
+library(janitor)
+library(lubridate)
 ```
+
+## Overview
+Add: 
+
+- image
+- summary
+- map
+- data citation
+
+## Willamette Falls fish passage time series summary {.tabset}
+
+### Original time series
+
+```{r}
+# tab 1  content
+
+```
+
+### Seasonplots
+
+```{r}
+# tab 2 content
+```
+
+
+### Summary statistics and analysis
+
+```{r}
+
+# Reading in the data
+fish <- read.csv(here("data", "willamette_fish_passage.csv")) %>% 
+  clean_names()
+
+# Create a subset of just the three species of interest, using pivot_longer to put them in one singular column 
+spp_date <- fish %>% 
+  select(date, coho, jack_coho, steelhead) %>% 
+  mutate(date = mdy(date)) %>% 
+  mutate(year = year(date)) %>% 
+  pivot_longer(cols = coho:steelhead,
+               names_to = "species", 
+               values_to = "count") %>% 
+  group_by(year) %>% 
+  count(species, wt = count)
+```
+
