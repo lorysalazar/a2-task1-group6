@@ -75,9 +75,48 @@ steelhead_ts <- fish_sub %>%
 ### Original time series
 
 ```{r}
-# tab 1  content
+# Create static graph of adult passage for coho, jack coho, and steelhead salmon
+
+# Coho
+coho_static <- ggplot(data = coho_ts, aes(x = date, y = count)) +
+  geom_line(color = "darksalmon") +
+  labs(title = "Coho Salmon") +
+  theme_minimal() +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank())
+
+# Jack Coho
+jack_static <- ggplot(data = jack_coho_ts, aes(x = date, y = count)) +
+  geom_line(color = "salmon") +
+  labs(title = "Jack Coho Salmon",
+       y = "Count") +
+  theme_minimal() +
+  theme(axis.title.x = element_blank())
+
+# Steelhead
+steelhead_static <- ggplot(data = steelhead_ts, aes(x = date, y = count)) +
+  geom_line(color = "lightsalmon") +
+  labs(title = "Steelhead Salmon",
+       x = "Date") +
+  theme_minimal() +
+  theme(axis.title.y = element_blank())
+
+# Patchwork to put pannels together
+tab_1_patchwork <- (coho_static/jack_static/steelhead_static)
+
+tab_1_patchwork + plot_annotation(
+  title = "Adult Salmon Passage Time Series",
+  subtitle = "Wilamette Falls Fish Ladder (2001-2010)",
+)
 
 ```
+**Figure 1.** Time series plot of adult passage counts for three salmon species, coho, jack coho, and steelhead at the Wilamette Falls fish ladder on the Willamette River in Oregon.
+
+Summary
+- Coho salmon passage appears to be seasonal, with strong peaks occurring at regular intervals in each year, with peaks seeming to trend upward.
+- Jack coho salmon also appear to have strong seasonal peaks, at similar times in the year as coho salmon. From this plot, there does not appear to be a strong trend in changes in counts.
+- Steelhead salmon also had seasonal peaks, though there were more fluctuations consistently between large peaks. From this plot, there is no clear discernible trend.
+
 
 ### Seasonplots
 
