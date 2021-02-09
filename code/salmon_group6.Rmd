@@ -14,6 +14,8 @@ library(tidyverse)
 library(here)
 library(janitor)
 library(lubridate)
+library(feasts)
+library(tsibble)
 ```
 
 ## Overview {.tabset}
@@ -39,15 +41,32 @@ fish <- read.csv(here("data", "willamette_fish_passage.csv")) %>%
   clean_names()
 
 # Create a subset of just the three species of interest, using pivot_longer to put them in one singular column 
-spp_date <- fish %>% 
+fish_sub <- fish %>% 
   select(date, coho, jack_coho, steelhead) %>% 
-  mutate(date = mdy(date)) %>% 
-  mutate(year = year(date)) %>% 
+  mutate(date = lubridate::mdy(date)) %>% 
+  mutate(year = year(date)) %>%  
   pivot_longer(cols = coho:steelhead,
                names_to = "species", 
-               values_to = "count") %>% 
-  group_by(year) %>% 
-  count(species, wt = count)
+               values_to = "count") 
+ 
+# Create a tsibble for each species (coho, jack_coho, steelhead)
+# coho
+coho_ts <- fish_sub %>% 
+  filter(species == "coho") %>% 
+  mutate(replace(., is.na(.), 0)) %>% 
+  as_tsibble(key = NULL, index = date) 
+
+# jack_coho
+jack_coho_ts <- fish_sub %>% 
+  filter(species == "jack_coho") %>% 
+  mutate(replace(., is.na(.), 0)) %>% 
+  as_tsibble(key = NULL, index = date) 
+
+# steelhead
+steelhead_ts <- fish_sub %>% 
+  filter(species == "steelhead") %>% 
+  mutate(replace(., is.na(.), 0)) %>% 
+  as_tsibble(key = NULL, index = date) 
 ```
 
 
@@ -61,7 +80,10 @@ spp_date <- fish %>%
 ### Seasonplots
 
 ```{r}
-# tab 2 content
+# Creating a seasonplot for each species
+
+spp_date %>% 
+  gg_season(y = n)
 
 ```
 
@@ -69,7 +91,10 @@ spp_date <- fish %>%
 ### Annual counts
 
 ```{r}
-
+# Group by year and count for each species
+spp_date <- fish_sub %>% 
+  group_by(year) %>% 
+  count(species, wt = count) 
 
 # Creating a plot to visualize annual counts of the three species
 
