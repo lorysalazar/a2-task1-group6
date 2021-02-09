@@ -24,7 +24,7 @@ library(lubridate)
 
 Summary:
 
-This report provides an overview of adult passage at the Willamette Falls fish ladder, for three species of fish (Coho, Jack-Coho, and Steelhead) observed at Willamette River in Oregon from 2001 - 2010 (Columbia River DART). Specifically, a static graph, seasonplot, and line plot of annual counts are used to explore how the fish populations are changing over the given timeframe.
+This report provides an overview of adult salmon passage at the Willamette Falls fish ladder, for three species of fish (Coho, Jack-Coho, and Steelhead) observed at Willamette River in Oregon from 2001 - 2010 (Columbia River DART). Specifically, a static graph, seasonplot, and line plot of annual counts are used to explore how the fish populations are changing over the given timeframe.
 
 
 ![Source: US Army Corps of Engineers, Portland District](https://www.nwp.usace.army.mil/Portals/24/images/Willamette_Falls_Locks_area_map.jpg?ver=2018-10-01-153840-817&timestamp=1538422736049)
@@ -32,22 +32,6 @@ This report provides an overview of adult passage at the Willamette Falls fish l
 Data citation: 
 
 Columbia River DART, Columbia Basin Research, University of Washington. (2021). Adult Passage Daily Counts. Available from http://www.cbr.washington.edu/dart/query/adult_daily
-
-### Original time series
-
-```{r}
-# tab 1  content
-
-```
-
-### Seasonplots
-
-```{r}
-# tab 2 content
-```
-
-
-### Annual counts
 
 ```{r}
 # Reading in the data
@@ -64,6 +48,28 @@ spp_date <- fish %>%
                values_to = "count") %>% 
   group_by(year) %>% 
   count(species, wt = count)
+```
+
+
+### Original time series
+
+```{r}
+# tab 1  content
+
+```
+
+### Seasonplots
+
+```{r}
+# tab 2 content
+
+```
+
+
+### Annual counts
+
+```{r}
+
 
 # Creating a plot to visualize annual counts of the three species
 
