@@ -16,15 +16,22 @@ library(janitor)
 library(lubridate)
 ```
 
-## Overview
-Add: 
+## Overview {.tabset}
 
-- image
-- summary
-- map
-- data citation
 
-## Willamette Falls fish passage time series summary {.tabset}
+![A view of Portland General Electric's hydropower project at Willamette Falls. Source: Portland General Electric](https://images.ctfassets.net/416ywc1laqmd/7slwrtWOXNbINMCiFHB4yE/fd392576d7eae7b827119c0ea0e27bed/Willamette-Falls-photo.jpg)
+
+
+Summary:
+
+This report provides an overview of adult passage at the Willamette Falls fish ladder, for three species of fish (Coho, Jack-Coho, and Steelhead) observed at Willamette River in Oregon from 2001 - 2010 (Columbia River DART). Specifically, a static graph, seasonplot, and line plot of annual counts are used to explore how the fish populations are changing over the given timeframe.
+
+
+![Source: US Army Corps of Engineers, Portland District](https://www.nwp.usace.army.mil/Portals/24/images/Willamette_Falls_Locks_area_map.jpg?ver=2018-10-01-153840-817&timestamp=1538422736049)
+
+Data citation: 
+
+Columbia River DART, Columbia Basin Research, University of Washington. (2021). Adult Passage Daily Counts. Available from http://www.cbr.washington.edu/dart/query/adult_daily
 
 ### Original time series
 
@@ -40,10 +47,9 @@ Add:
 ```
 
 
-### Summary statistics and analysis
+### Annual counts
 
 ```{r}
-
 # Reading in the data
 fish <- read.csv(here("data", "willamette_fish_passage.csv")) %>% 
   clean_names()
@@ -58,5 +64,25 @@ spp_date <- fish %>%
                values_to = "count") %>% 
   group_by(year) %>% 
   count(species, wt = count)
+
+# Creating a plot to visualize annual counts of the three species
+
+ggplot(data = spp_date, aes(x = year, y = n)) +
+  geom_line(size = 1.5, aes(color = species)) +
+    scale_color_manual(values = c("mediumpurple3","cyan4","coral"), 
+                     name = "Fish species") +
+  labs(title = "Annual fish counts by species (2001-2010)",
+       x = "Year", y = "Number of fish counts") +
+    scale_x_continuous(breaks = c(2001:2010)) +
+  theme_minimal() +
+  theme(legend.position = c(0.87, 0.82))
 ```
 
+**Figure 3.** Coho, Jack-Coho, and Steelhead fish counts, measured by time (years) from 2001-2010. Purple (Coho), teal (Jack-Coho) and coral (Steelhead) lines indicate total annual counts per species. Data: Columbia River DART.
+
+#### Summary
+
+- Jack-Coho fish counts remained relatively stable over time from 2001 through 2010.
+- Steelhead fish counts seemed to fluctuate but showed an overall decreasing trend until the end of the timeframe. 
+- Coho fish counts fluctuated until 2008, where they increased sharply, then began dropping again in 2009.
+- Both Coho and Steelhead species showed an increase around 2008-2009, indicating that an event may have occurred during this time leading to the increase. 
