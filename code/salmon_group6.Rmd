@@ -112,7 +112,7 @@ patchwork + plot_annotation(
   caption = "Data: Columbia River DART"
 )
 ```
-**Figure 2.** Seasonal plot for salmon passage counts for 3 species (Coho, Jack-Coho, and Steelhead). Fish counts were measured from 2001-2010. Data: Columbia River DART.
+**Figure 2.** Seasonal plot for salmon passage counts at the Willamette Falls fish ladder in Oregon. Passage counts of 3 species (Coho, Jack-Coho, and Steelhead) were measured from 2001-2010. Data: Columbia River DART.
 
 #### Summary
 
